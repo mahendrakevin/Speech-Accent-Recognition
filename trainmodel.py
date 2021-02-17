@@ -24,7 +24,7 @@ SILENCE_THRESHOLD = .01
 RATE = 24000
 N_MFCC = 13
 COL_SIZE = 30
-EPOCHS = 10 #35#250
+EPOCHS = 20 #35#250
 
 def to_categorical(y):
     '''
@@ -165,7 +165,7 @@ def train_model(X_train,y_train,X_validation,y_validation, batch_size=128): #64
                   metrics=['accuracy'])
 
     # Stops training if accuracy does not change at least 0.005 over 10 epochs
-    es = EarlyStopping(monitor='acc', min_delta=.005, patience=10, verbose=1, mode='auto')
+    es = EarlyStopping(monitor='accuracy', min_delta=.005, patience=10, verbose=1, mode='auto')
 
     # Creates log file for graphical interpretation using TensorBoard
     tb = TensorBoard(log_dir='../logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=True,
@@ -177,7 +177,7 @@ def train_model(X_train,y_train,X_validation,y_validation, batch_size=128): #64
 
     # Fit model using ImageDataGenerator
     model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size),
-                        steps_per_epoch=len(X_train) / 32
+                        steps_per_epoch=len(X_train) // batch_size
                         , epochs=EPOCHS,
                         callbacks=[es,tb], validation_data=(X_validation,y_validation))
 
@@ -262,7 +262,7 @@ if __name__ == '__main__':
     X_validation, y_validation = make_segments(X_test, y_test)
 
     # Randomize training segments
-    X_train, _, y_train, _ = train_test_split(X_train, y_train, test_size=0)
+    X_train, _, y_train, _ = train_test_split(X_train, y_train)
 
     # Train model
     model = train_model(np.array(X_train), np.array(y_train), np.array(X_validation),np.array(y_validation))

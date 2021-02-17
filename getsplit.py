@@ -38,15 +38,15 @@ def filter_df(df):
     '''
 
     arabic = df[df.native_language == 'arabic']
-    mandarin = df[df.native_language == 'mandarin']
+    spanish = df[df.native_language == 'spanish']
     english = df[df.native_language == 'english']
 
-    mandarin = mandarin[mandarin.length_of_english_residence < 10]
+    spanish = spanish[spanish.length_of_english_residence < 10]
     arabic = arabic[arabic.length_of_english_residence < 10]
 
     df = df.append(english)
     df = df.append(arabic)
-    df = df.append(mandarin)
+    df = df.append(spanish)
 
     return df
 
@@ -59,7 +59,7 @@ def split_people(df,test_size=0.2):
     '''
 
 
-    return train_test_split(df['language_num'],df['native_language'],test_size=test_size,random_state=1234)
+    return train_test_split(df['language_num'],df['native_language'],test_size=test_size, random_state=1234)
 
 
 if __name__ == '__main__':

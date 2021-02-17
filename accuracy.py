@@ -9,7 +9,7 @@ def predict_class_audio(MFCCs, model):
     :return: Predicted class of MFCC segment group
     '''
     MFCCs = MFCCs.reshape(MFCCs.shape[0],MFCCs.shape[1],MFCCs.shape[2],1)
-    y_predicted = model.predict_classes(MFCCs,verbose=0)
+    y_predicted = np.argmax(model.predict(MFCCs,verbose=0), axis=-1)
     return(Counter(list(y_predicted)).most_common(1)[0][0])
 
 
